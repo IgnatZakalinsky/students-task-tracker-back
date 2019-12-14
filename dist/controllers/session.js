@@ -28,11 +28,11 @@ router.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     else
         res.send(404);
 }));
-router.post('/login', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.post('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log(req.body);
     //let result = await addUser(req.body.name);
     // await addUserMongo(req.body.name);
-    if (req.body.taskCount) {
+    if (Number(req.body.taskCount)) {
         const token = uuidv1();
         store.sessions.push({
             authorToken: token,
@@ -47,7 +47,7 @@ router.post('/login', (req, res) => __awaiter(void 0, void 0, void 0, function* 
         res.send(JSON.stringify(answer));
     }
     else {
-        res.send(JSON.stringify({ error: 'where is taskCount?' }));
+        res.send(JSON.stringify({ error: 'where is taskCount? (must be number)' }));
     }
 }));
 // router.get('/:id', async (req, res) => {
