@@ -21,14 +21,14 @@ router.post('/', async (req: any, res: any) => {
     console.log(req.body);
     //let result = await addUser(req.body.name);
     // await addUserMongo(req.body.name);
-    if (!req.body.authorToken) {
+    if (!req.body.sessionToken) {
         res.send(JSON.stringify({error: 'where is sessionToken?'}));
     } else if (!req.body.name || req.body.name.length < 8) {
         res.send(JSON.stringify({error: 'name.length must be 7+'}));
     } else {
         const session = store.sessions.find(s => s.authorToken === req.body.sessionToken);
         if (!session) {
-            res.send(JSON.stringify({error: 'bad authorToken'}));
+            res.send(JSON.stringify({error: 'bad sessionToken'}));
         } else if (session.finishSession) {
             res.send(JSON.stringify({error: 'session is finished'}));
         } else {
