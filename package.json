@@ -2,7 +2,7 @@
   "name": "student-task-tracker-back",
   "version": "1.0.0",
   "scripts": {
-    "start": "SET PORT=7542 && nodemon --inspect dist/index.js",
+    "start": "SET PORT=7543 && node dist/index.js",
     "watch": "tsc -w",
     "clean": "rimraf dist"
   },

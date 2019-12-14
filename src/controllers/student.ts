@@ -2,6 +2,9 @@
 // let {getUsers, addUser} = require('./rep.js');
 
 // @ts-ignore
+const uuidv1 = require('uuid/v1');
+
+// @ts-ignore
 const express = require('express');
 // @ts-ignore
 const store = require('./../bd/fake');

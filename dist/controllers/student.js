@@ -11,6 +11,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 // @ts-ignore
+const uuidv1 = require('uuid/v1');
+// @ts-ignore
 const express = require('express');
 // @ts-ignore
 const store = require('./../bd/fake');
