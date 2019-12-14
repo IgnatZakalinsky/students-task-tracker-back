@@ -14,6 +14,37 @@ router.use(function timeLog(req: any, res: any, next: any) {
     next();
 });
 
+router.post('/', async (req: any, res: any) => {
+    console.log(req.body);
+    //let result = await addUser(req.body.name);
+    // await addUserMongo(req.body.name);
+    if (!req.body.authorToken) {
+        res.send(JSON.stringify({error: 'where is authorToken?'}));
+    } else if (!req.body.name || req.body.name.length < 8) {
+        res.send(JSON.stringify({error: 'name.length must be 7+'}));
+    } else {
+        const session = store.sessions.find(s => s.authorToken === req.body.authorToken);
+        if (!session) {
+            res.send(JSON.stringify({error: 'bad authorToken'}));
+        } else if (session.finishSession) {
+            res.send(JSON.stringify({error: 'session is finished'}));
+        } else {
+
+            const token = uuidv1();
+            session.students.push({
+                studentToken: token,
+                name: req.body.name,
+                currentTaskNumber: 0,
+            });
+            const answer = {
+                studentToken: token,
+                taskCount: session.taskCount,
+            };
+            res.send(JSON.stringify(answer));
+        }
+    }
+});
+
 // router.get('/:id', async (req, res) => {
 //     let users = await getUsersMongoById(req.params.id);
 //
