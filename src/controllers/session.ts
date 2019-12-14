@@ -23,13 +23,13 @@ router.get('/store', async (req: any, res: any) => {
     else res.send(404);
 });
 router.get('/', async (req: any, res: any) => {
-    console.log(req.params);
+    console.log(req.query);
     //let result = await addUser(req.body.name);
     // await addUserMongo(req.body.name);
-    if (!req.params.authorToken) {
+    if (!req.query.authorToken) {
         res.send(JSON.stringify({error: 'where is authorToken?'}));
     } else {
-        const session = store.sessions.find(s => s.authorToken === req.params.authorToken);
+        const session = store.sessions.find(s => s.authorToken === req.query.authorToken);
         if (!session) {
             res.send(JSON.stringify({error: 'bad authorToken'}));
         } else if (session.finishSession) {
