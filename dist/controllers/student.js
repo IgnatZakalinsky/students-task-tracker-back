@@ -28,13 +28,13 @@ router.post('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //let result = await addUser(req.body.name);
     // await addUserMongo(req.body.name);
     if (!req.body.authorToken) {
-        res.send(JSON.stringify({ error: 'where is authorToken?' }));
+        res.send(JSON.stringify({ error: 'where is sessionToken?' }));
     }
     else if (!req.body.name || req.body.name.length < 8) {
         res.send(JSON.stringify({ error: 'name.length must be 7+' }));
     }
     else {
-        const session = store.sessions.find(s => s.authorToken === req.body.authorToken);
+        const session = store.sessions.find(s => s.authorToken === req.body.sessionToken);
         if (!session) {
             res.send(JSON.stringify({ error: 'bad authorToken' }));
         }

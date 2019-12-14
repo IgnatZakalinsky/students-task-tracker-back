@@ -3,7 +3,8 @@
 const store = {
     sessions: [
         {
-            authorToken: 'devTestSessionToken',
+            sessionToken: 'devTestSessionToken',
+            authorToken: 'devTestAuthorToken',
             startDate: new Date(),
             taskCount: 17,
             finishSession: false,

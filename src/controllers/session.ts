@@ -1,6 +1,7 @@
 // const {addUserMongo, getUsersMongo, deleteUsersMongo, getUsersMongoById, updateUsersMongo} = require("./mongoRep");
 // let {getUsers, addUser} = require('./rep.js');
 
+// @ts-ignore
 const uuidv1 = require('uuid/v1');
 
 // @ts-ignore
@@ -26,16 +27,19 @@ router.post('/', async (req: any, res: any) => {
     //let result = await addUser(req.body.name);
     // await addUserMongo(req.body.name);
     if (Number(req.body.taskCount)) {
-        const token = uuidv1();
+        const tokenS = uuidv1();
+        const tokenA = uuidv1();
         store.sessions.push({
-            authorToken: token,
+            sessionToken: tokenS,
+            authorToken: tokenA,
             startDate: new Date(),
             taskCount: req.body.taskCount,
             finishSession: false,
             students: [],
         });
         const answer = {
-            authorToken: token,
+            sessionToken: tokenS,
+            authorToken: tokenA,
         };
 
             res.send(JSON.stringify(answer));
