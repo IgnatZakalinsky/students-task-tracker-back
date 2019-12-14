@@ -47,6 +47,51 @@ router.post('/', async (req: any, res: any) => {
         }
     }
 });
+router.put('/', async (req: any, res: any) => {
+    console.log(req.body);
+    //let result = await addUser(req.body.name);
+    // await addUserMongo(req.body.name);
+    if (!req.body.sessionToken) {
+        res.send(JSON.stringify({error: 'where is sessionToken?'}));
+    } else {
+        const session = store.sessions.find(s => s.sessionToken === req.body.sessionToken);
+        if (!session) {
+            res.send(JSON.stringify({error: 'bad sessionToken'}));
+        } else if (session.finishSession) {
+            res.send(JSON.stringify({error: 'session is finished'}));
+        } else if (!req.body.name || req.body.name.length < 8) {
+            res.send(JSON.stringify({taskCount: session.taskCount, error: 'name.length must be 7+'}));
+        } else if (!req.body.currentTaskNumber
+            || req.body.currentTaskNumber < 0 || req.body.currentTaskNumber > session.taskCount) {
+            res.send(JSON.stringify({
+                taskCount: session.taskCount,
+                error: 'bad currentTaskNumber: ' + req.body.currentTaskNumber
+            }));
+        } else if (!req.body.studentToken) {
+            res.send(JSON.stringify({taskCount: session.taskCount, error: 'where is studentToken?'}));
+        } else {
+            const student = session.students.find(s => s.studentToken === req.body.studentToken);
+            if (!student) {
+                res.send(JSON.stringify({
+                    taskCount: session.taskCount,
+                    error: "session don't have student with your studentToken"
+                }));
+            } else {
+
+                session.students = session.students.map(s => s.studentToken === req.body.studentToken
+                    ? {
+                        ...s,
+                        name: req.body.name,
+                        currentTaskNumber: req.body.currentTaskNumber,
+                    } : s);
+                const answer = {
+                    taskCount: session.taskCount,
+                };
+                res.send(JSON.stringify(answer));
+            }
+        }
+    }
+});
 
 // router.get('/:id', async (req, res) => {
 //     let users = await getUsersMongoById(req.params.id);
