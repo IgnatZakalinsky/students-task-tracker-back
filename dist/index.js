@@ -34,7 +34,7 @@ app.use(bodyParser.json());
 // });
 ///////////////////////////////////////////////////////////////////////
 app.use('/session', session);
-app.use('/auth', student);
+app.use('/student', student);
 //default
 app.use((req, res) => {
     res.send(404);
