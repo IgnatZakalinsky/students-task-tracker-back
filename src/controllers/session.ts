@@ -1,6 +1,8 @@
 // const {addUserMongo, getUsersMongo, deleteUsersMongo, getUsersMongoById, updateUsersMongo} = require("./mongoRep");
 // let {getUsers, addUser} = require('./rep.js');
 
+const uuidv1 = require('uuid/v1');
+
 // @ts-ignore
 const express = require('express');
 // @ts-ignore
@@ -18,6 +20,28 @@ router.get('/', async (req: any, res: any) => {
 
     if (store) res.send(JSON.stringify(store));
     else res.send(404);
+});
+router.post('/login', async (req: any, res: any) => {
+    console.log(req.body);
+    //let result = await addUser(req.body.name);
+    // await addUserMongo(req.body.name);
+    if (req.body.taskCount) {
+        const token = uuidv1();
+        store.sessions.push({
+            authorToken: token,
+            startDate: new Date(),
+            taskCount: req.body.taskCount,
+            finishSession: false,
+            students: [],
+        });
+        const answer = {
+            authorToken: token,
+        };
+
+            res.send(JSON.stringify(answer));
+    } else {
+        res.send(JSON.stringify({error: 'where is taskCount?'}));
+    }
 });
 
 // router.get('/:id', async (req, res) => {
