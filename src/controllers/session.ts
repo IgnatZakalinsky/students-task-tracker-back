@@ -14,6 +14,12 @@ router.use(function timeLog(req: any, res: any, next: any) {
     next();
 });
 
+router.get('/', async (req: any, res: any) => {
+
+    if (store) res.send(JSON.stringify(store));
+    else res.send(404);
+});
+
 // router.get('/:id', async (req, res) => {
 //     let users = await getUsersMongoById(req.params.id);
 //
