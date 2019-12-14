@@ -34,7 +34,7 @@ router.post('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         res.send(JSON.stringify({ error: 'name.length must be 7+' }));
     }
     else {
-        const session = store.sessions.find(s => s.authorToken === req.body.sessionToken);
+        const session = store.sessions.find(s => s.sessionToken === req.body.sessionToken);
         if (!session) {
             res.send(JSON.stringify({ error: 'bad sessionToken' }));
         }

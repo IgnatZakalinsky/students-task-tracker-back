@@ -23,11 +23,31 @@ router.use(function timeLog(req, res, next) {
     console.log('Time: ', Date.now(), store);
     next();
 });
-router.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get('/store', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (store)
         res.send(JSON.stringify(store));
     else
         res.send(404);
+}));
+router.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log(req.body);
+    //let result = await addUser(req.body.name);
+    // await addUserMongo(req.body.name);
+    if (!req.body.authorToken) {
+        res.send(JSON.stringify({ error: 'where is authorToken?' }));
+    }
+    else {
+        const session = store.sessions.find(s => s.authorToken === req.body.authorToken);
+        if (!session) {
+            res.send(JSON.stringify({ error: 'bad authorToken' }));
+        }
+        else if (session.finishSession) {
+            res.send(JSON.stringify({ error: 'session is finished' }));
+        }
+        else {
+            res.send(JSON.stringify(session.students));
+        }
+    }
 }));
 router.post('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log(req.body);

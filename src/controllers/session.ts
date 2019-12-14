@@ -17,11 +17,30 @@ router.use(function timeLog(req: any, res: any, next: any) {
     next();
 });
 
-router.get('/', async (req: any, res: any) => {
+router.get('/store', async (req: any, res: any) => {
 
     if (store) res.send(JSON.stringify(store));
     else res.send(404);
 });
+router.get('/', async (req: any, res: any) => {
+    console.log(req.body);
+    //let result = await addUser(req.body.name);
+    // await addUserMongo(req.body.name);
+    if (!req.body.authorToken) {
+        res.send(JSON.stringify({error: 'where is authorToken?'}));
+    } else {
+        const session = store.sessions.find(s => s.authorToken === req.body.authorToken);
+        if (!session) {
+            res.send(JSON.stringify({error: 'bad authorToken'}));
+        } else if (session.finishSession) {
+            res.send(JSON.stringify({error: 'session is finished'}));
+        } else {
+
+            res.send(JSON.stringify(session.students));
+        }
+    }
+});
+
 router.post('/', async (req: any, res: any) => {
     console.log(req.body);
     //let result = await addUser(req.body.name);

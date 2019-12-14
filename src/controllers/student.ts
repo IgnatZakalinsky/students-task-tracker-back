@@ -26,7 +26,7 @@ router.post('/', async (req: any, res: any) => {
     } else if (!req.body.name || req.body.name.length < 8) {
         res.send(JSON.stringify({error: 'name.length must be 7+'}));
     } else {
-        const session = store.sessions.find(s => s.authorToken === req.body.sessionToken);
+        const session = store.sessions.find(s => s.sessionToken === req.body.sessionToken);
         if (!session) {
             res.send(JSON.stringify({error: 'bad sessionToken'}));
         } else if (session.finishSession) {
