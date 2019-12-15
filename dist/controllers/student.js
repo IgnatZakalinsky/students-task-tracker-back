@@ -71,9 +71,6 @@ router.put('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         else if (session.finishSession) {
             res.send(JSON.stringify({ error: 'session is finished' }));
         }
-        else if (!req.body.name || req.body.name.length < 8) {
-            res.send(JSON.stringify({ taskCount: session.taskCount, error: 'name.length must be 7+' }));
-        }
         else if (req.body.currentTaskNumber === undefined
             || req.body.currentTaskNumber < 0 || req.body.currentTaskNumber > session.taskCount) {
             res.send(JSON.stringify({
@@ -89,15 +86,27 @@ router.put('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             const student = session.students.find(s => s.studentToken === req.body.studentToken);
             if (!student) {
                 res.send(JSON.stringify({
-                    taskCount: session.taskCount,
                     error: "session don't have student with your studentToken"
                 }));
+            }
+            else if (req.body.name > 0 && req.body.name.length < 8) {
+                res.send(JSON.stringify({ taskCount: session.taskCount, error: 'name.length must be 7+' }));
+            }
+            else if (!req.body.name) {
+                const answer = {
+                    taskCount: session.taskCount,
+                    name: student.name,
+                    currentTaskNumber: student.currentTaskNumber,
+                };
+                res.send(JSON.stringify(answer));
             }
             else {
                 session.students = session.students.map(s => s.studentToken === req.body.studentToken
                     ? Object.assign(Object.assign({}, s), { name: req.body.name, currentTaskNumber: req.body.currentTaskNumber }) : s);
                 const answer = {
                     taskCount: session.taskCount,
+                    name: req.body.name,
+                    currentTaskNumber: req.body.currentTaskNumber,
                 };
                 res.send(JSON.stringify(answer));
             }

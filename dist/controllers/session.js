@@ -23,6 +23,7 @@ router.use(function timeLog(req, res, next) {
     console.log('Time: ', Date.now(), store);
     next();
 });
+// for dev
 router.get('/store', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (store)
         res.send(JSON.stringify(store));

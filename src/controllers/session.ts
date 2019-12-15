@@ -17,11 +17,13 @@ router.use(function timeLog(req: any, res: any, next: any) {
     next();
 });
 
+// for dev
 router.get('/store', async (req: any, res: any) => {
 
     if (store) res.send(JSON.stringify(store));
     else res.send(404);
 });
+
 router.get('/', async (req: any, res: any) => {
     console.log(req.query);
     //let result = await addUser(req.body.name);
