@@ -61,7 +61,7 @@ router.put('/', async (req: any, res: any) => {
             res.send(JSON.stringify({error: 'session is finished'}));
         } else if (!req.body.name || req.body.name.length < 8) {
             res.send(JSON.stringify({taskCount: session.taskCount, error: 'name.length must be 7+'}));
-        } else if (!req.body.currentTaskNumber
+        } else if (req.body.currentTaskNumber === undefined
             || req.body.currentTaskNumber < 0 || req.body.currentTaskNumber > session.taskCount) {
             res.send(JSON.stringify({
                 taskCount: session.taskCount,
