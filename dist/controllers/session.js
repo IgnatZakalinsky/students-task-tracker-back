@@ -45,7 +45,12 @@ router.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             res.send(JSON.stringify({ error: 'session is finished' }));
         }
         else {
-            res.send(JSON.stringify(session.students));
+            const answer = {
+                sessionToken: session.sessionToken,
+                taskCount: session.taskCount,
+                students: session.students
+            };
+            res.send(JSON.stringify(answer));
         }
     }
 }));

@@ -78,8 +78,8 @@ router.put('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             || req.body.currentTaskNumber < 0 || req.body.currentTaskNumber > session.taskCount) {
             res.send(JSON.stringify({
                 taskCount: session.taskCount,
-                error: 'bad currentTaskNumber: ' + req.body.currentTaskNumber
-                    + 'must  be between -1 and ' + (session.taskCount + 1),
+                error: 'bad currentTaskNumber: [' + req.body.currentTaskNumber
+                    + '] - must  be between -1 and ' + (session.taskCount + 1),
             }));
         }
         else if (!req.body.studentToken) {

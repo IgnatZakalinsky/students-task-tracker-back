@@ -35,8 +35,13 @@ router.get('/', async (req: any, res: any) => {
         } else if (session.finishSession) {
             res.send(JSON.stringify({error: 'session is finished'}));
         } else {
+            const answer = {
+                sessionToken: session.sessionToken,
+                taskCount: session.taskCount,
+                students: session.students
+            };
 
-            res.send(JSON.stringify(session.students));
+            res.send(JSON.stringify(answer));
         }
     }
 });
