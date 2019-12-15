@@ -2,10 +2,11 @@
 // const {addUserMongo, getUsersMongo, deleteUsersMongo, getUsersMongoById, updateUsersMongo} = require("./mongoRep");
 // let {getUsers, addUser} = require('./rep.js');
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -22,7 +23,7 @@ router.use(function timeLog(req, res, next) {
     console.log('Time: ', Date.now(), store);
     next();
 });
-router.post('/', (req, res) => __awaiter(this, void 0, void 0, function* () {
+router.post('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log(req.body);
     //let result = await addUser(req.body.name);
     // await addUserMongo(req.body.name);
@@ -55,7 +56,7 @@ router.post('/', (req, res) => __awaiter(this, void 0, void 0, function* () {
         }
     }
 }));
-router.put('/', (req, res) => __awaiter(this, void 0, void 0, function* () {
+router.put('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log(req.body);
     //let result = await addUser(req.body.name);
     // await addUserMongo(req.body.name);
@@ -78,6 +79,7 @@ router.put('/', (req, res) => __awaiter(this, void 0, void 0, function* () {
             res.send(JSON.stringify({
                 taskCount: session.taskCount,
                 error: 'bad currentTaskNumber: ' + req.body.currentTaskNumber
+                    + 'must  be between -1 and ' + (session.taskCount + 1),
             }));
         }
         else if (!req.body.studentToken) {
@@ -93,7 +95,7 @@ router.put('/', (req, res) => __awaiter(this, void 0, void 0, function* () {
             }
             else {
                 session.students = session.students.map(s => s.studentToken === req.body.studentToken
-                    ? Object.assign({}, s, { name: req.body.name, currentTaskNumber: req.body.currentTaskNumber }) : s);
+                    ? Object.assign(Object.assign({}, s), { name: req.body.name, currentTaskNumber: req.body.currentTaskNumber }) : s);
                 const answer = {
                     taskCount: session.taskCount,
                 };
