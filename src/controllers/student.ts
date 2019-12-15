@@ -42,6 +42,8 @@ router.post('/', async (req: any, res: any) => {
             const answer = {
                 studentToken: token,
                 taskCount: session.taskCount,
+                name: req.body.name,
+                currentTaskNumber: 0,
             };
             res.send(JSON.stringify(answer));
         }
