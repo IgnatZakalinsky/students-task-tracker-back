@@ -2,11 +2,10 @@
 // const {addUserMongo, getUsersMongo, deleteUsersMongo, getUsersMongoById, updateUsersMongo} = require("./mongoRep");
 // let {getUsers, addUser} = require('./rep.js');
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -24,13 +23,13 @@ router.use(function timeLog(req, res, next) {
     next();
 });
 // for dev
-router.get('/store', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get('/store', (req, res) => __awaiter(this, void 0, void 0, function* () {
     if (store)
         res.send(JSON.stringify(store));
     else
         res.send(404);
 }));
-router.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get('/', (req, res) => __awaiter(this, void 0, void 0, function* () {
     console.log(req.query);
     //let result = await addUser(req.body.name);
     // await addUserMongo(req.body.name);
@@ -55,7 +54,7 @@ router.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         }
     }
 }));
-router.post('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.post('/', (req, res) => __awaiter(this, void 0, void 0, function* () {
     console.log(req.body);
     //let result = await addUser(req.body.name);
     // await addUserMongo(req.body.name);
@@ -78,6 +77,33 @@ router.post('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
     else {
         res.send(JSON.stringify({ error: 'where is taskCount? (must be number)' }));
+    }
+}));
+router.put('/', (req, res) => __awaiter(this, void 0, void 0, function* () {
+    console.log(req.body);
+    //let result = await addUser(req.body.name);
+    // await addUserMongo(req.body.name);
+    if (!req.query.authorToken) {
+        res.send(JSON.stringify({ error: 'where is authorToken?' }));
+    }
+    else {
+        const session = store.sessions.find(s => s.authorToken === req.query.authorToken);
+        if (!session) {
+            res.send(JSON.stringify({ error: 'bad authorToken' }));
+        }
+        else if (session.finishSession) {
+            res.send(JSON.stringify({ error: 'session is finished' }));
+        }
+        else {
+            const answer = Object.assign({}, session, { taskCount: req.body.taskCount, finishSession: req.body.finishSession });
+            if (Number(req.body.taskCount) || req.body.finishSession) {
+                store.sessions = store.sessions.map(s => s.authorToken === answer.authorToken ? answer : s);
+                res.send(JSON.stringify(answer));
+            }
+            else {
+                res.send(JSON.stringify({ error: 'where is taskCount? (must be number)' }));
+            }
+        }
     }
 }));
 // router.get('/:id', async (req, res) => {

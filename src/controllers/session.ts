@@ -73,6 +73,34 @@ router.post('/', async (req: any, res: any) => {
         res.send(JSON.stringify({error: 'where is taskCount? (must be number)'}));
     }
 });
+router.put('/', async (req: any, res: any) => {
+    console.log(req.body);
+    //let result = await addUser(req.body.name);
+    // await addUserMongo(req.body.name);
+    if (!req.query.authorToken) {
+        res.send(JSON.stringify({error: 'where is authorToken?'}));
+    } else {
+        const session = store.sessions.find(s => s.authorToken === req.query.authorToken);
+        if (!session) {
+            res.send(JSON.stringify({error: 'bad authorToken'}));
+        } else if (session.finishSession) {
+            res.send(JSON.stringify({error: 'session is finished'}));
+        } else {
+            const answer = {
+                ...session,
+                taskCount: req.body.taskCount,
+                finishSession: req.body.finishSession,
+            };
+            if (Number(req.body.taskCount) || req.body.finishSession) {
+                store.sessions = store.sessions.map(s => s.authorToken === answer.authorToken ? answer : s);
+
+                res.send(JSON.stringify(answer));
+            } else {
+                res.send(JSON.stringify({error: 'where is taskCount? (must be number)'}));
+            }
+        }
+    }
+});
 
 // router.get('/:id', async (req, res) => {
 //     let users = await getUsersMongoById(req.params.id);
