@@ -77,10 +77,10 @@ router.put('/', async (req: any, res: any) => {
     console.log(req.body);
     //let result = await addUser(req.body.name);
     // await addUserMongo(req.body.name);
-    if (!req.query.authorToken) {
+    if (!req.body.authorToken) {
         res.send(JSON.stringify({error: 'where is authorToken?'}));
     } else {
-        const session = store.sessions.find(s => s.authorToken === req.query.authorToken);
+        const session = store.sessions.find(s => s.authorToken === req.body.authorToken);
         if (!session) {
             res.send(JSON.stringify({error: 'bad authorToken'}));
         } else if (session.finishSession) {
