@@ -41,6 +41,9 @@ router.post('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         else if (session.finishSession) {
             res.send(JSON.stringify({ error: 'session is finished' }));
         }
+        else if (session.students.find(s => s.name === req.body.name)) {
+            res.send(JSON.stringify({ error: 'such student name already exists' }));
+        }
         else {
             const token = uuidv1();
             session.students.push({
@@ -62,13 +65,13 @@ router.put('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log(req.body);
     //let result = await addUser(req.body.name);
     // await addUserMongo(req.body.name);
-    if (!req.body.sessionToken) {
-        res.send(JSON.stringify({ error: 'where is sessionToken?' }));
+    if (!req.body.studentToken) {
+        res.send(JSON.stringify({ error: 'where is studentToken?' }));
     }
     else {
-        const session = store.sessions.find(s => s.sessionToken === req.body.sessionToken);
+        const session = store.sessions.find(s => !!s.students.find(st => st.studentToken === req.body.studentToken));
         if (!session) {
-            res.send(JSON.stringify({ error: 'bad sessionToken' }));
+            res.send(JSON.stringify({ error: 'session don\'t have student with your studentToken' }));
         }
         else if (session.finishSession) {
             res.send(JSON.stringify({ error: 'session is finished' }));
@@ -80,9 +83,6 @@ router.put('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 error: 'bad currentTaskNumber: [' + req.body.currentTaskNumber
                     + '] - must  be between -1 and ' + (session.taskCount + 1),
             }));
-        }
-        else if (!req.body.studentToken) {
-            res.send(JSON.stringify({ taskCount: session.taskCount, error: 'where is studentToken?' }));
         }
         else {
             const student = session.students.find(s => s.studentToken === req.body.studentToken);
