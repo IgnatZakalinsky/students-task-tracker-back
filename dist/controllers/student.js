@@ -116,28 +116,28 @@ router.put('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 }));
 router.delete('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(req.body);
+    console.log(req.query);
     //let result = await addUser(req.body.name);
     // await addUserMongo(req.body.name);
-    if (!req.body.studentToken) {
+    if (!req.query.studentToken) {
         res.send(JSON.stringify({ error: 'where is studentToken?' }));
     }
-    else if (!req.body.authorToken) {
+    else if (!req.query.authorToken) {
         res.send(JSON.stringify({ error: 'where is authorToken?' }));
     }
     else {
-        const session = store.sessions.find(s => s.authorToken === req.body.authorToken);
+        const session = store.sessions.find(s => s.authorToken === req.query.authorToken);
         if (!session) {
             res.send(JSON.stringify({ error: 'bad authorToken' }));
         }
-        else if (!session.students.find(s => s.studentToken === req.body.studentToken)) {
+        else if (!session.students.find(s => s.studentToken === req.query.studentToken)) {
             res.send(JSON.stringify({ error: 'session don\'t have student with your studentToken' }));
         }
         else if (session.finishSession) {
             res.send(JSON.stringify({ error: 'session is finished' }));
         }
         else {
-            session.students = session.students.filter(s => s.studentToken !== req.body.studentToken);
+            session.students = session.students.filter(s => s.studentToken !== req.query.studentToken);
             res.send(JSON.stringify(session));
         }
     }
